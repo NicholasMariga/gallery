@@ -5,14 +5,19 @@ pipeline {
         nodejs 'NodeJS'
     }
 
+    environment {
+        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
+        RENDER_URL = 'http://localhost:5000'  
+    }
+
     stages {
-        stage('Clone the Repository...') {
+        stage('Clone Repository') {
             steps {
-                 git branch:'master', url:'https://github.com/NicholasMariga/gallery.git'
+                git branch: 'master', url: 'https://github.com/NicholasMariga/gallery.git'
             }
         }
 
-        stage('Install Dependencies ') {
+        stage('Install Dependencies') {
             steps {
                 sh 'node -v'
                 sh 'npm -v'
@@ -22,20 +27,44 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                //At the moment no tests
                 sh 'echo "No tests specified"'
-                //sh 'npm test || echo "No tests specified"'
             }
         }
+
         stage('Deploy to Render') {
             steps {
-                // Start the server
-                //sh 'node server.js &'
-                //sh 'nohup node server.js > server.log 2>&1 &'
-                sh 'node server.js'
+                sh 'node server.js &'
             }
         }
     }
 
-}
+    post {
+        success {
+            script {
+                def buildID = currentBuild.number
+                def message = """
+                :white_check_mark: *Build #${buildID} Deployed Successfully!*  
+                🌍 *Render URL:* ${env.RENDER_URL}  
+                🕒 *Time:* ${new Date()}  
+                """
+                
+                sh """
+                curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' $SLACK_WEBHOOK_URL
+                """
+            }
+        }
+        failure {
+            script {
+                def buildID = currentBuild.number
+                def message = """
+                :x: *Build #${buildID} Failed!*  
+                Check Jenkins logs for details.
+                """
 
+                sh """
+                curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' $SLACK_WEBHOOK_URL
+                """
+            }
+        }
+    }
+}
