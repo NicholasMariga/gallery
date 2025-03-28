@@ -49,7 +49,7 @@ pipeline {
                 """
                 
                 sh """
-                curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' $SLACK_WEBHOOK_URL
+                curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' https://hooks.slack.com/services/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
                 """
             }
         }
@@ -68,3 +68,6 @@ pipeline {
         }
     }
 }
+
+
+
