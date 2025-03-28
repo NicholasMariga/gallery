@@ -1,18 +1,25 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'
+    environment {
+        // Environment variables
+            //In Jenkins, go to Manage Jenkins → Manage Credentials.
+            //Add a new Secret Text credential for each MongoDB connection string:
+                //MONGO_URI_PRODUCTION
+                //MONGO_URI_DEVELOPMENT
+                //MONGO_URI_TEST
+        NODE_ENV = "development"
+        MONGO_URI = credentials('MONGO_URI_DEVELOPMENT')
     }
 
     stages {
-        stage('Clone the Repository...') {
+        stage('Clone Repository') {
             steps {
-                 git branch:'master', url:'https://github.com/NicholasMariga/gallery.git'
+                git branch: 'master', url: 'https://github.com/NicholasMariga/gallery.git'
             }
         }
 
-        stage('Install Dependencies ') {
+        stage('Install Dependencies') {
             steps {
                 sh 'node -v'
                 sh 'npm -v'
@@ -22,20 +29,20 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                //At the moment no tests
                 sh 'echo "No tests specified"'
-                //sh 'npm test || echo "No tests specified"'
             }
         }
-        stage('Deploy to Render') {
+
+        stage('Deploy') {
             steps {
-                // Start the server
-                //sh 'node server.js &'
-                //sh 'nohup node server.js > server.log 2>&1 &'
-                sh 'node server.js'
+                sh 'node server.js &'
             }
         }
     }
 
+    post {
+        always {
+            cleanWs()
+        }
+    }
 }
-

@@ -1,9 +1,10 @@
 var config = {}
 
-// Update to have your correct username and password
+// Use environment variables for security
 config.mongoURI = {
-    production: 'mongodb+srv://<USERNAME>:<PASSWORD>@gallery.wc344.mongodb.net/darkroom?retryWrites=true&w=majority',
-    development: 'mongodb+srv://<USERNAME>:<PASSWORD>@gallery.wc344.mongodb.net/darkroom-dev?retryWrites=true&w=majority',
-    test: 'mongodb+srv://<USERNAME>:<PASSWORD>@gallery.wc344.mongodb.net/darkroom-test?retryWrites=true&w=majority',
+    production: process.env.MONGO_URI_PRODUCTION || 'mongodb+srv://<USERNAME>:<PASSWORD>@gallery.mongodb.net/darkroom?retryWrites=true&w=majority',
+    development: process.env.MONGO_URI_DEVELOPMENT || 'mongodb+srv://<USERNAME>:<PASSWORD>@gallery.mongodb.net/darkroom-dev?retryWrites=true&w=majority',
+    test: process.env.MONGO_URI_TEST || 'mongodb+srv://<USERNAME>:<PASSWORD>@gallery.mongodb.net/darkroom-test?retryWrites=true&w=majority',
 }
+
 module.exports = config;
