@@ -1,32 +1,32 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'NodeJS'
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Clone the Repository...') {
             steps {
-                // Clone the repository
-                checkout scm
+                 git branch:'master', url:'https://github.com/NicholasMariga/gallery.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Dependencies ') {
             steps {
-                // Ensure Node.js and npm are installed
                 sh 'node -v'
                 sh 'npm -v'
-
-                // Install project dependencies
                 sh 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                // Placeholder for tests (update when tests are added)
-                sh 'npm test || echo "No tests specified"'
+                //At the moment no tests
+                sh 'echo "No tests specified"'
+                //sh 'npm test || echo "No tests specified"'
             }
         }
-
         stage('Deploy to Render') {
             steps {
                 // Start the server
