@@ -46,6 +46,6 @@ app.use('/image', image);
 //     console.log(`Server is listening at http://localhost:${PORT}`);
 // });
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '192.168.100.58', () => {
+app.listen(PORT, () => {
     console.log(`Server is listening at http://192.168.100.58:${PORT}`)
 });
