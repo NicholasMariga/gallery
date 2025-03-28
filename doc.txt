@@ -1,0 +1,7 @@
+sudo docker container run -d \
+    -p 8080:8080 \
+    -p 5000:5000 \
+    -v jenkinsvol:/var/jenkins_home \
+    --name jenkins-local \
+    jenkins/jenkins:lts
+
