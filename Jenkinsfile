@@ -38,35 +38,35 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            script {
-                def buildID = currentBuild.number
-                def message = """
-                :white_check_mark: *Build #${buildID} Deployed Successfully!*  
-                🌍 *Render URL:* ${env.RENDER_URL}  
-                🕒 *Time:* ${new Date()}  
-                """
+// post {
+//         success {
+//             script {
+//                 def buildID = currentBuild.number
+//                 def message = """
+//                 :white_check_mark: *Build #${buildID} Deployed Successfully!*  
+//                 🌍 *Render URL:* ${env.RENDER_URL}  
+//                 🕒 *Time:* ${new Date()}  
+//                 """
                 
-                sh """
-                curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' https://hooks.slack.com/services/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
-                """
-            }
-        }
-        failure {
-            script {
-                def buildID = currentBuild.number
-                def message = """
-                :x: *Build #${buildID} Failed!*  
-                Check Jenkins logs for details.
-                """
+//                 sh """
+//                 curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' https://hooks.slack.com/services/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
+//                 """
+//             }
+//         }
+//         failure {
+//             script {
+//                 def buildID = currentBuild.number
+//                 def message = """
+//                 :x: *Build #${buildID} Failed!*  
+//                 Check Jenkins logs for details.
+//                 """
 
-                sh """
-                curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' $SLACK_WEBHOOK_URL
-                """
-            }
-        }
-    }
+//                 sh """
+//                 curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' $SLACK_WEBHOOK_URL
+//                 """
+//             }
+//         }
+//     }    
 }
 
 
