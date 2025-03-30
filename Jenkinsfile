@@ -32,7 +32,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'node server.js'
+                sh 'node server.js &'
             }
         }
     }
@@ -50,6 +50,13 @@ pipeline {
                 channel: '#devops09', 
                 color: 'danger', 
                 message: "❌ Build Failed! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
+            )
+        }
+        aborted {
+            slackSend(
+                channel: '#devops09',
+                color: 'warning', 
+                message: "⚠️ Build Aborted! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
             )
         }
     }
