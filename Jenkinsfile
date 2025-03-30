@@ -27,7 +27,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'echo "No tests specified"'
+                sh 'npm test'
             }
         }
 
