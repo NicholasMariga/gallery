@@ -6,8 +6,7 @@ pipeline {
     }
 
     environment {
-        SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
-        RENDER_URL = 'http://localhost:5000'  
+        RENDER_URL = 'http://localhost:5000'
     }
 
     stages {
@@ -31,43 +30,27 @@ pipeline {
             }
         }
 
-        stage('Deploy to Render') {
+        stage('Deploy') {
             steps {
                 sh 'node server.js'
             }
         }
     }
 
-// post {
-//         success {
-//             script {
-//                 def buildID = currentBuild.number
-//                 def message = """
-//                 :white_check_mark: *Build #${buildID} Deployed Successfully!*  
-//                 🌍 *Render URL:* ${env.RENDER_URL}  
-//                 🕒 *Time:* ${new Date()}  
-//                 """
-                
-//                 sh """
-//                 curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' https://hooks.slack.com/services/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
-//                 """
-//             }
-//         }
-//         failure {
-//             script {
-//                 def buildID = currentBuild.number
-//                 def message = """
-//                 :x: *Build #${buildID} Failed!*  
-//                 Check Jenkins logs for details.
-//                 """
-
-//                 sh """
-//                 curl -X POST -H 'Content-type: application/json' --data '{"text": "${message}"}' $SLACK_WEBHOOK_URL
-//                 """
-//             }
-//         }
-//     }    
+    post {
+        success {
+            slackSend(
+                channel: '#devops09', 
+                color: 'good', 
+                message: "✅ Build Successful! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
+            )
+        }
+        failure {
+            slackSend(
+                channel: '#devops09', 
+                color: 'danger', 
+                message: "❌ Build Failed! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
+            )
+        }
+    }
 }
-
-
-
