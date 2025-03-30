@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
-const config = require('./_config'); // Import the config file
+const config = require('./_config');
 
 // Define routes
 let index = require('./routes/index');
@@ -25,8 +25,15 @@ db.once('open', () => {
     console.log('Database connected successfully');
 });
 
+// Check if the database connection is successful
+// let db = mongoose.connection;
+// db.once('open', () => {
+//     console.log('Database connected successfully');
+// });
+
 // Initializing the app
 const app = express();
+
 
 // View Engine
 app.set('view engine', 'ejs');
@@ -45,7 +52,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is listening at http://localhost:${PORT}`);
 });
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//     console.log(`Server is listening at http://192.168.100.58:${PORT}`)
-// });
