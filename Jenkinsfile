@@ -52,7 +52,7 @@ pipeline {
                 channel: SLACK_CHANNEL, 
                 color: 'good', 
                 message: """
-                ✅ Build & Deploy Successful! 🚀
+                Build & Deploy Successful! 🚀
                 *Job:* ${env.JOB_NAME}
                 *Build:* #${env.BUILD_NUMBER}
                 *Build URL:* <${env.BUILD_URL}|View Build>
@@ -64,14 +64,14 @@ pipeline {
             slackSend(
                 channel: SLACK_CHANNEL, 
                 color: 'danger', 
-                message: "❌ Build & Deploy Failed! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
+                message: "Build & Deploy Failed! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
             )
         }
         aborted {
             slackSend(
                 channel: SLACK_CHANNEL, 
                 color: 'warning', 
-                message: "⚠️ Build Aborted! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
+                message: "Build Aborted! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
             )
         }
     }
