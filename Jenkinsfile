@@ -32,7 +32,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'node server.js &'
+                sh 'node server.js'
             }
         }
     }
