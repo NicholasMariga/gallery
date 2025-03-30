@@ -6,7 +6,9 @@ pipeline {
     }
 
     environment {
-        RENDER_URL = 'http://localhost:5000'
+        SLACK_CHANNEL = '#devops09'
+        RENDER_SERVICE_NAME = 'gallerynick'
+        RENDER_URL = 'https://gallery-71p3.onrender.com/' 
     }
 
     stages {
@@ -30,9 +32,16 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Render') {
             steps {
-                sh 'node server.js'
+                withCredentials([string(credentialsId: 'RENDER_API_KEY', variable: 'RENDER_API_KEY')]) {
+                    sh """
+                    curl -X POST "https://api.render.com/v1/services/${RENDER_SERVICE_NAME}/deploys" \
+                        -H "Accept: application/json" \
+                        -H "Authorization: Bearer ${RENDER_API_KEY}" \
+                        -d ''
+                    """
+                }
             }
         }
     }
@@ -40,21 +49,27 @@ pipeline {
     post {
         success {
             slackSend(
-                channel: '#devops09', 
+                channel: SLACK_CHANNEL, 
                 color: 'good', 
-                message: "✅ Build Successful! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
+                message: """
+                ✅ Build & Deploy Successful! 🚀
+                *Job:* ${env.JOB_NAME}
+                *Build:* #${env.BUILD_NUMBER}
+                *Build URL:* <${env.BUILD_URL}|View Build>
+                *Render URL:* <${env.RENDER_URL}|Visit Application>
+                """
             )
         }
         failure {
             slackSend(
-                channel: '#devops09', 
+                channel: SLACK_CHANNEL, 
                 color: 'danger', 
-                message: "❌ Build Failed! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
+                message: "❌ Build & Deploy Failed! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
             )
         }
         aborted {
             slackSend(
-                channel: '#devops09',
+                channel: SLACK_CHANNEL, 
                 color: 'warning', 
                 message: "⚠️ Build Aborted! \n*Job:* ${env.JOB_NAME} \n*Build:* #${env.BUILD_NUMBER} \n*URL:* <${env.BUILD_URL}|View Build>"
             )
