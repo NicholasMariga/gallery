@@ -52,7 +52,7 @@ pipeline {
                 channel: SLACK_CHANNEL, 
                 color: 'good', 
                 message: """
-                Build & Deploy Successful! 🚀
+                Build & Deploy Successful!
                 *Job:* ${env.JOB_NAME}
                 *Build:* #${env.BUILD_NUMBER}
                 *Build URL:* <${env.BUILD_URL}|View Build>
